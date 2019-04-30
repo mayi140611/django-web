@@ -50,9 +50,6 @@ class Test2ViewSet(viewsets.GenericViewSet):
     serializer_class = CsvFileSerializer
     parser_classes = (FileUploadParser,)
 
-    # parser_classes = (MultiPartParser, )
-    # parser_classes = (FileUploadParser, )
-    # @action(detail=False, methods=['POST'], headers="content-type=multipart/form-data")
     @action(detail=False, methods=['POST'])
     def match(self, request):
         """
