@@ -21,6 +21,9 @@ from django_rest_web.settings import BASE_DIR
 import os
 
 
+projname = 'dicproj'
+
+
 def standardize(s):
     """
     字符串标准化
@@ -85,7 +88,7 @@ def match(code1, name1, threshold=0.9):
         name = standardize(name1)
         code = standardize(code1)
     except Exception as e:
-        print(code1, name1)
+        print(f'{code1}, {name1} 格式有误，未处理！')
         print(e)
         return
     if name in dis_name_code_dict:
@@ -130,6 +133,47 @@ def match(code1, name1, threshold=0.9):
     return 2, rlist
 
 
+def update_dic(dft):
+    """
+    更新标注字典库
+    :param dft:
+    :return:
+    """
+    dft = dft[dft.iloc[:, -1].apply(int) == 1]# 1表示已经经过业务专家确认过的
+    flag = 0
+    count1, count2 = 0, 0
+    for line in dft.itertuples():
+        if line[3] not in dis_name_code_dict:
+            dis_name_code_dict[line[3]] = [line[4]]
+            print('新增dis_name_code_dict：{}:{}'.format(line[3], [line[4]]))
+            flag = 1
+            count1 += 1
+        if line[4] not in dis_code_name_dict and line[5]:
+            dis_code_name_dict[line[4]] = line[5]
+            print('新增dis_code_name_dict：{}:{}'.format(line[4], line[5]))
+            flag = 1
+            count2 += 1
+    if flag == 1:
+        data_dir = os.path.join(BASE_DIR, projname, 'data')
+        backups_dir = os.path.join(data_dir, 'backups')
+        if not os.path.exists(backups_dir):
+            os.mkdir(backups_dir)
+            print(f'新建备份目录： {backups_dir}')
+
+        if os.path.exists(os.path.join(data_dir, 'dis_name_code_dict.pkl')) and os.path.exists(os.path.join(data_dir, 'dis_code_name_dict.pkl')):
+            now = datetime.now()
+            nowstr = now.strftime('%Y%m%d%H%M%S')
+            d1 = os.path.join(backups_dir, 'dis_name_code_dict_{}.pkl'.format(nowstr))
+            d2 = os.path.join(backups_dir, 'dis_code_name_dict_{}.pkl'.format(nowstr))
+            shutil.move(os.path.join(data_dir, 'dis_name_code_dict.pkl'), d1)
+            shutil.move(os.path.join(data_dir, 'dis_code_name_dict.pkl'), d2)
+            print('备份字典：{}'.format(d1))
+            print('备份字典：{}'.format(d2))
+        picklew.dump2File(dis_name_code_dict, os.path.join(data_dir, 'dis_name_code_dict.pkl'))
+        picklew.dump2File(dis_code_name_dict, os.path.join(data_dir, 'dis_code_name_dict.pkl'))
+    print(f'finished！dis_name_code_dict新增 {count1} 条记录！ dis_code_name_dict新增 {count2} 条记录！')
+
+
 def tokenizer(x):
     """
     分词
@@ -143,8 +187,8 @@ def tokenizer(x):
 
 df = pd.read_csv('/Users/luoyonggui/Documents/work/dataset/1/icd10_leapstack.csv')
 # 3bitcode
-df3 = pd.read_excel('/Users/luoyonggui/Documents/work/dataset/1/3bitcode.xls', skiprows=[0])
-df4 = pd.read_excel('/Users/luoyonggui/Documents/work/dataset/1/4bitcode.xls', skiprows=[0]).iloc[:, 1:]
+# df3 = pd.read_excel('/Users/luoyonggui/Documents/work/dataset/1/3bitcode.xls', skiprows=[0])
+# df4 = pd.read_excel('/Users/luoyonggui/Documents/work/dataset/1/4bitcode.xls', skiprows=[0]).iloc[:, 1:]
 dis_name_code_dict = picklew.loadFromFile(os.path.join(BASE_DIR, 'dicproj/data/dis_name_code_dict.pkl'))
 dis_code_name_dict = picklew.loadFromFile(os.path.join(BASE_DIR, 'dicproj/data/dis_code_name_dict.pkl'))
 
