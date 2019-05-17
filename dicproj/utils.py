@@ -185,7 +185,7 @@ def tokenizer(x):
     return ' '.join(jieba.lcut(x))
 
 
-df = pd.read_csv('/Users/luoyonggui/Documents/work/dataset/1/icd10_leapstack.csv')
+df = pd.read_csv('/Users/luoyonggui/Documents/datasets/work/1/icd10_leapstack.csv')
 # 3bitcode
 # df3 = pd.read_excel('/Users/luoyonggui/Documents/work/dataset/1/3bitcode.xls', skiprows=[0])
 # df4 = pd.read_excel('/Users/luoyonggui/Documents/work/dataset/1/4bitcode.xls', skiprows=[0]).iloc[:, 1:]

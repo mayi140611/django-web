@@ -18,7 +18,7 @@ from django.urls import path
 from django.conf.urls import url, include
 from rest_framework import routers
 from rest_framework.schemas import get_schema_view
-from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
+from rest_framework_swagger.renderers import  SwaggerUIRenderer, OpenAPIRenderer
 from quickstart import views
 from test1 import views as v1
 from dicproj import views as v2
@@ -29,12 +29,13 @@ from dicproj import views as v2
 router = routers.DefaultRouter()
 # router.register(r'users', views.UserViewSet)
 # router.register(r'groups', views.GroupViewSet)
-router.register(r'test1', v1.TestVeiwSet)
-router.register(r'test2', v1.TestVeiwSet1)
+# router.register(r'test1', v1.TestVeiwSet)
+# router.register(r'test2', v1.TestVeiwSet1)
 router.register(r'dic', v2.TestVeiwSet)
 router.register(r'dicmatch', v2.Test2ViewSet)
 # router.register(r'report', v1.DiagnosisViewSet)
 schema_view = get_schema_view(title='项目python端接口文档', renderer_classes=[OpenAPIRenderer, SwaggerUIRenderer])
+# schema_view = get_schema_view(title='项目python端接口文档', renderer_classes=[SwaggerUIRenderer])
 
 urlpatterns = [
     url(r'^api/docs/', schema_view, name="docs"),

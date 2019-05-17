@@ -26,4 +26,4 @@ class DicSerializer(serializers.ModelSerializer):
 class CsvFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CsvFile
-        fields = ('file', )
+        fields = '__all__'

@@ -10,8 +10,7 @@ class Dic(models.Model):
 
 
 class CsvFile(models.Model):
-
     file = models.FileField()
 
     class Meta:
-        ordering = ('file',)
+        ordering = ('file', )

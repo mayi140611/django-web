@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 import dicproj.utils as utils
 from dicproj.serializers import DicSerializer, CsvFileSerializer
 from dicproj.models import Dic, CsvFile
-from rest_framework.parsers import FileUploadParser, MultiPartParser, FormParser
+from rest_framework.parsers import MultiPartParser, FormParser
 import pandas as pd
 import numpy as np
 
@@ -96,7 +96,7 @@ class TestVeiwSet(viewsets.GenericViewSet):
 class Test2ViewSet(viewsets.GenericViewSet):
     queryset = CsvFile.objects.all()
     serializer_class = CsvFileSerializer
-    parser_classes = (FileUploadParser,)
+    parser_classes = (FormParser, MultiPartParser,)
 
     @action(detail=False, methods=['POST'])
     def match(self, request):
@@ -105,14 +105,9 @@ class Test2ViewSet(viewsets.GenericViewSet):
         :param request:
         :return:
         """
-        p = request.data
+        # 文件上传
         file_obj = request.data["file"]
-        print(file_obj)#FileName.txt
-        print(type(file_obj))#<class 'django.core.files.uploadedfile.InMemoryUploadedFile'>
-        dft = pd.read_csv(file_obj)#
-        print(file_obj.name)#FileName.txt
-        print(file_obj.size)#1544897
-        print(p)#{'file': <InMemoryUploadedFile: FileName.txt (text/plain)>}
+        dft = pd.read_csv(file_obj)
         print(dft.head())
 
         d = {
